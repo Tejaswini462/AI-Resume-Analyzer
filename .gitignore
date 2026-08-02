@@ -1,10 +1,22 @@
+# Virtual Environment
+.venv/
+.venv312/
+venv/
+
+# Python Cache
 __pycache__/
 *.pyc
+
+# Environment Variables
 .env
-.venv/
-venv/
+
+# Database
+*.db
 *.sqlite3
-*.log
+
+# VS Code
+.vscode/
+
+# OS Files
 .DS_Store
-static/uploads/*
-!static/uploads/.gitkeep
+Thumbs.db
