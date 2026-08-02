@@ -130,13 +130,13 @@ python app.py
 ## Screenshots
 
 --Home Page--
-![alt text](assests/homepage.png)
+![alt text](assets/homepage.png)
  ---
  --Login Page--
- ![alt text](assests/login.png)
+ ![alt text](assets/login.png)
  ---
  --Resume Analysis--
- ![alt text](assests/analysis.png)
+ ![alt text](assets/analysis.png)
 
 ## Future Enhancements
 
