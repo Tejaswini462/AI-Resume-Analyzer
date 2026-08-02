@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block title %}Analysis{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <h2 class="mb-1">Resume Analysis</h2>
+        <p class="text-muted mb-0">Review resume quality, section scoring, and side-by-side job alignment.</p>
+    </div>
+</div>
+
+{% if resume and analysis_data %}
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 h-100 rounded-4 stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="card-title mb-0">Overall ATS Score</h5>
+                    <span class="badge bg-primary-subtle text-primary">Live</span>
+                </div>
+                <p class="display-6 mb-0">{{ analysis_data.overall_score }}/100</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 h-100 rounded-4 report-card">
+            <div class="card-body">
+                <h5 class="card-title">Strengths</h5>
+                <ul class="mb-0 ps-3">
+                    {% for item in analysis_data.strengths %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 h-100 rounded-4 report-card">
+            <div class="card-body">
+                <h5 class="card-title">Weaknesses</h5>
+                <ul class="mb-0 ps-3">
+                    {% for item in analysis_data.weaknesses %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4 rounded-4 report-card">
+    <div class="card-body">
+        <h4 class="mb-3">Section-wise Scores</h4>
+        <div class="row g-3">
+            {% for key, value in analysis_data.section_scores.items() %}
+            <div class="col-md-3">
+                <div class="card border-0 h-100 rounded-4 score-card">
+                    <div class="card-body">
+                        <h6 class="text-capitalize">{{ key.replace('_', ' ') }}</h6>
+                        <p class="mb-0 fw-bold">{{ value }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm rounded-4 mb-4 report-card">
+    <div class="card-body">
+        <h4 class="mb-3">Extracted Resume Details</h4>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item"><strong>Name:</strong> {{ parsed_resume.name or 'Not found' }}</div>
+                    <div class="list-group-item"><strong>Email:</strong> {{ parsed_resume.email or 'Not found' }}</div>
+                    <div class="list-group-item"><strong>Phone:</strong> {{ parsed_resume.phone or 'Not found' }}</div>
+                    <div class="list-group-item"><strong>Skills:</strong> {{ parsed_resume.skills or 'Not found' }}</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item"><strong>Education:</strong> {{ parsed_resume.education or 'Not found' }}</div>
+                    <div class="list-group-item"><strong>Experience:</strong> {{ parsed_resume.experience or 'Not found' }}</div>
+                    <div class="list-group-item"><strong>Projects:</strong> {{ parsed_resume.projects or 'Not found' }}</div>
+                    <div class="list-group-item"><strong>Certifications:</strong> {{ parsed_resume.certifications or 'Not found' }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm rounded-4 report-card">
+    <div class="card-body">
+        <h4 class="mb-3">Compare with Job Description</h4>
+        <form method="POST" action="{{ url_for('analysis.job_match') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="resume_id" value="{{ resume.id }}">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Job Title</label>
+                    <input type="text" class="form-control" name="job_title" placeholder="e.g. Python Developer">
+                </div>
+                <div class="col-md-8">
+                    <label class="form-label">Job Description</label>
+                    <textarea class="form-control" name="job_description" rows="5" placeholder="Paste the job description here"></textarea>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Run Match</button>
+        </form>
+    </div>
+</div>
+{% else %}
+<div class="card shadow-sm rounded-4">
+    <div class="card-body">
+        <p class="mb-0">No resume is available for analysis yet.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

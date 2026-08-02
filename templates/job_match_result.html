@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}Job Match Result{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <h2 class="mb-1">Job Match Result</h2>
+        <p class="text-muted mb-0">Compare candidate strengths to the target role and highlight missing fit areas.</p>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4 report-card">
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('analysis.job_match') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Select Resume</label>
+                    <select class="form-select" name="resume_id">
+                        {% for resume in resumes %}
+                        <option value="{{ resume.id }}">{{ resume.filename }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Job Title</label>
+                    <input type="text" class="form-control" name="job_title" placeholder="e.g. Python Developer">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Job Description</label>
+                    <textarea class="form-control" name="job_description" rows="4" placeholder="Paste the job description here"></textarea>
+                </div>
+            </div>
+            <button class="btn btn-primary mt-3">Run Match</button>
+        </form>
+    </div>
+</div>
+
+{% if match_result %}
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 h-100 rounded-4 stat-card">
+            <div class="card-body">
+                <h5 class="card-title">Match Percentage</h5>
+                <p class="display-6 mb-0">{{ match_result.match_percentage }}%</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 h-100 rounded-4 report-card">
+            <div class="card-body">
+                <h5 class="card-title">Matching Skills</h5>
+                <p class="mb-0">{{ match_result.matching_skills or 'None found' }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 h-100 rounded-4 report-card">
+            <div class="card-body">
+                <h5 class="card-title">Missing Skills</h5>
+                <p class="mb-0">{{ match_result.missing_skills or 'None found' }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 rounded-4 report-card">
+    <div class="card-body">
+        <h4 class="mb-3">Recommendations</h4>
+        <ul class="mb-0 ps-3">
+            {% for item in match_result.recommendations %}
+            <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
