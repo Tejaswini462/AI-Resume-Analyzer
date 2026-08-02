@@ -129,9 +129,14 @@ python app.py
 
 ## Screenshots
 
-Login page
-
----
+--Home Page--
+![alt text](assests/homepage.png)
+ ---
+ --Login Page--
+ ![alt text](assests/login.png)
+ ---
+ --Resume Analysis--
+ ![alt text](assests/analysis.png)
 
 ## Future Enhancements
 
